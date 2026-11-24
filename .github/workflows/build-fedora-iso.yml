@@ -46,8 +46,8 @@ jobs:
         run: |
           echo "=== Step 1: Listing local podman images ==="
           sudo podman images
-          echo "=== Step 2: Checking bootc-image-builder CLI help ==="
-          sudo podman run --rm quay.io/centos-bootc/bootc-image-builder:latest --help || true
+          echo "=== Step 2: Inspecting kernel and initramfs inside container ==="
+          sudo podman run --rm localhost/nexus-os:2026.1 sh -c 'ls -la /usr/lib/modules/*/'
           echo "=== Step 3: Executing bootc-image-builder for ISO generation ==="
           sudo podman run \
             --rm \
@@ -88,3 +88,12 @@ jobs:
             build/nexus-os-2026.1-x86_64.iso.sha256
           retention-days: 14
           if-no-files-found: error
+
+      - name: Upload Build Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-failure-logs
+          path: |
+            build/
+          if-no-files-found: ignore

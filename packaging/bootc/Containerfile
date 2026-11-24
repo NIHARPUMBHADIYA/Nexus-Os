@@ -96,5 +96,24 @@ COPY packaging/scripts/nexus-firstboot.sh /usr/libexec/nexus/nexus-firstboot.sh
 RUN chmod 0755 /usr/libexec/nexus/nexus-firstboot.sh && \
     systemctl enable nexus-firstboot.service || true
 
-# 10. Clean caches and prepare container image for bootc kernel assembly
+# 10. Install Live Boot Tools & Generate Contract-Compliant Initramfs
+RUN dnf -y install \
+    dracut-live \
+    dracut-squash \
+    squashfs-tools \
+    grub2-efi-x64 \
+    grub2-pc \
+    grub2-pc-modules \
+    shim-x64 \
+    efibootmgr \
+    && dnf clean all
+
+RUN KVER=$(ls /usr/lib/modules | head -n1) && \
+    echo "Configuring kernel ${KVER} for bootc ISO contract..." && \
+    if [ ! -f "/usr/lib/modules/${KVER}/vmlinuz" ] && [ -f "/boot/vmlinuz-${KVER}" ]; then \
+      cp "/boot/vmlinuz-${KVER}" "/usr/lib/modules/${KVER}/vmlinuz"; \
+    fi && \
+    dracut --verbose --kver "${KVER}" --force --add "dmsquash-live squash" "/usr/lib/modules/${KVER}/initramfs.img"
+
+# 11. Clean caches and prepare container image for bootc kernel assembly
 RUN dnf clean all && rm -rf /var/cache/dnf /tmp/* /var/tmp/*
