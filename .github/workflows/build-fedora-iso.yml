@@ -29,8 +29,12 @@ jobs:
           echo "=== Free disk space after cleanup ==="
           df -h
 
-      - name: Configure Podman Storage
+      - name: Configure Host Security & Podman Storage
         run: |
+          echo "=== Disabling AppArmor user namespace restrictions for osbuild/bwrap ==="
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+          sudo systemctl stop apparmor || true
+          sudo aa-teardown || true
           sudo mkdir -p /etc/containers
           echo -e '[storage]\ndriver = "overlay"\nrunroot = "/run/containers/storage"\ngraphroot = "/var/lib/containers/storage"' | sudo tee /etc/containers/storage.conf
 
@@ -53,10 +57,16 @@ jobs:
           echo "=== Step 3: Checking bootc-image-builder help ==="
           sudo podman run --rm quay.io/centos-bootc/bootc-image-builder:latest build --help || true
           echo "=== Step 4: Executing bootc-image-builder for ISO generation ==="
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+          sudo aa-teardown || true
           sudo podman run \
             --rm \
             --privileged \
             --security-opt label=type:unconfined_t \
+            --security-opt apparmor=unconfined \
+            --security-opt seccomp=unconfined \
+            --cap-add=ALL \
+            -v /dev:/dev \
             -v $(pwd)/build:/output \
             -v $(pwd)/packaging/bootc/data/repositories:/usr/share/osbuild-composer/repositories:ro \
             -v $(pwd)/packaging/bootc/data/repositories:/etc/osbuild-composer/repositories:ro \
