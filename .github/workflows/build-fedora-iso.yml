@@ -44,11 +44,15 @@ jobs:
 
       - name: Generate Bootable Fedora ISO via bootc-image-builder
         run: |
+          set -x
+          exec > >(tee -a /tmp/step6.log) 2>&1
           echo "=== Step 1: Listing local podman images ==="
           sudo podman images
           echo "=== Step 2: Inspecting kernel and initramfs inside container ==="
-          sudo podman run --rm localhost/nexus-os:2026.1 sh -c 'ls -la /usr/lib/modules/*/'
-          echo "=== Step 3: Executing bootc-image-builder for ISO generation ==="
+          sudo podman run --rm localhost/nexus-os:2026.1 sh -c 'ls -la /usr/lib/modules/' || true
+          echo "=== Step 3: Checking bootc-image-builder help ==="
+          sudo podman run --rm quay.io/centos-bootc/bootc-image-builder:latest --help || true
+          echo "=== Step 4: Executing bootc-image-builder for ISO generation ==="
           sudo podman run \
             --rm \
             --privileged \
@@ -89,11 +93,15 @@ jobs:
           retention-days: 14
           if-no-files-found: error
 
-      - name: Upload Build Logs on Failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-failure-logs
-          path: |
-            build/
-          if-no-files-found: ignore
+      - name: Save and Push Debug Logs to Git Branch
+        if: always()
+        run: |
+          mkdir -p ci-logs
+          echo "Run ID: ${{ github.run_id }}" > ci-logs/summary.txt
+          cat /tmp/step6.log >> ci-logs/summary.txt 2>/dev/null || true
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B ci-debug-logs
+          git add -f ci-logs/
+          git commit -m "ci: debug logs for run ${{ github.run_id }}" || true
+          git push -f origin ci-debug-logs || true
