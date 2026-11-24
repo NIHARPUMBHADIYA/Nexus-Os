@@ -58,15 +58,17 @@ jobs:
             --privileged \
             --security-opt label=type:unconfined_t \
             -v $(pwd)/build:/output \
-            -v $(pwd)/packaging/bootc/data/repositories:/repositories:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/usr/share/osbuild-composer/repositories:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/etc/osbuild-composer/repositories:ro \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
             quay.io/centos-bootc/bootc-image-builder:latest \
+            --log-level info \
             build \
             --type iso \
             --rootfs ext4 \
             --output /output \
-            --force-repo https://download.fedoraproject.org/pub/fedora/linux/releases/41/Everything/x86_64/os/ \
-            --force-repo https://download.fedoraproject.org/pub/fedora/linux/updates/41/Everything/x86_64/ \
+            --force-repo https://dl.fedoraproject.org/pub/archive/fedora/linux/releases/41/Everything/x86_64/os/ \
+            --force-repo https://dl.fedoraproject.org/pub/archive/fedora/linux/updates/41/Everything/x86_64/ \
             localhost/nexus-os:2026.1
 
       - name: Package & Checksum Output ISO

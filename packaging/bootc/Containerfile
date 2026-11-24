@@ -11,7 +11,7 @@ LABEL version="2026.1"
 
 # 1. System Repositories and GPG Keys
 RUN dnf -y install 'dnf5-plugins' && \
-    dnf config-manager addrepo --from-repofile=https://dl.fedoraproject.org/pub/fedora/linux/releases/41/Everything/x86_64/os/ || true
+    dnf config-manager addrepo --from-repofile=https://dl.fedoraproject.org/pub/archive/fedora/linux/releases/41/Everything/x86_64/os/ || true
 
 # 2. Base Desktop & Display Infrastructure (KDE Plasma 6 Wayland)
 RUN dnf -y install \

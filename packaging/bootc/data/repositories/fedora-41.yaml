@@ -1,7 +1,9 @@
 x86_64:
   - name: fedora
+    baseurl: https://dl.fedoraproject.org/pub/archive/fedora/linux/releases/41/Everything/x86_64/os/
     metalink: https://mirrors.fedoraproject.org/metalink?repo=fedora-41&arch=x86_64
     check_gpg: false
   - name: updates
+    baseurl: https://dl.fedoraproject.org/pub/archive/fedora/linux/updates/41/Everything/x86_64/
     metalink: https://mirrors.fedoraproject.org/metalink?repo=updates-released-f41&arch=x86_64
     check_gpg: false
