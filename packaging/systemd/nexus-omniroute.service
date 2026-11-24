@@ -1,0 +1,23 @@
+[Unit]
+Description=NEXUS OS OmniRoute AI Gateway Service
+Documentation=https://github.com/ChrisCompton/omniroute
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/omniroute run
+Restart=on-failure
+RestartSec=5s
+Environment=NODE_ENV=production
+Environment=PORT=20128
+StandardOutput=journal
+StandardError=journal
+LimitNOFILE=65536
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

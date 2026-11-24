@@ -1,0 +1,11 @@
+module Nexus.DesktopShell
+NexusDesktop 1.0 NexusDesktop.qml
+NexusTopPanel 1.0 NexusTopPanel.qml
+NexusDock 1.0 NexusDock.qml
+NexusWindow 1.0 NexusWindow.qml
+NexusWindowManager 1.0 NexusWindowManager.qml
+NexusLauncher 1.0 NexusLauncher.qml
+NexusQuickSettings 1.0 NexusQuickSettings.qml
+NexusNotificationCenter 1.0 NexusNotificationCenter.qml
+NexusContextMenu 1.0 NexusContextMenu.qml
+NexusWallpaperPicker 1.0 NexusWallpaperPicker.qml

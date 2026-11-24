@@ -1,0 +1,30 @@
+{
+  "id": "nord",
+  "name": "Nord",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Arctic, north-bluish clean aesthetic inspired by the polar night.",
+  "colors": {
+    "background": "#242933",
+    "secondaryBackground": "#2E3440",
+    "surface": "#3B4252",
+    "elevatedSurface": "#434C5E",
+    "border": "#4C566A",
+    "borderFocus": "#88C0D0",
+    "primaryText": "#ECEFF4",
+    "secondaryText": "#D8DEE9",
+    "tertiaryText": "#939BAA",
+    "accent": "#88C0D0",
+    "accentHover": "#81A1C1",
+    "accentSubtle": "#2B4049",
+    "success": "#A3BE8C",
+    "successSubtle": "#31442E",
+    "warning": "#EBCB8B",
+    "warningSubtle": "#4D422C",
+    "error": "#BF616A",
+    "errorSubtle": "#48262B",
+    "info": "#81A1C1",
+    "infoSubtle": "#283C4D"
+  }
+}

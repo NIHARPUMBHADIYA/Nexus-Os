@@ -1,0 +1,19 @@
+app-id: org.nexus_os.DevHub
+runtime: org.kde.Platform
+runtime-version: '6.8'
+sdk: org.kde.Sdk
+command: nexus-devhub
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --filesystem=host:ro
+  - --talk-name=org.nexus.AICore
+  - --talk-name=org.nexus.Search
+
+modules:
+  - name: nexus-devhub
+    buildsystem: cmake-ninja
+    sources:
+      - type: dir
+        path: ../../src/devhub

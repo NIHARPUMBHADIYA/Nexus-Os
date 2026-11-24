@@ -1,0 +1,30 @@
+{
+  "id": "paper-light",
+  "name": "Paper Light",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "light",
+  "description": "Crisp high-contrast warm paper with deep editorial stone ink.",
+  "colors": {
+    "background": "#FBFBFA",
+    "secondaryBackground": "#F2F1EE",
+    "surface": "#FFFFFF",
+    "elevatedSurface": "#FFFFFF",
+    "border": "#E5E4DE",
+    "borderFocus": "#4F46E5",
+    "primaryText": "#1C1917",
+    "secondaryText": "#57534E",
+    "tertiaryText": "#A8A29E",
+    "accent": "#4F46E5",
+    "accentHover": "#4338CA",
+    "accentSubtle": "#EEF2FF",
+    "success": "#16A34A",
+    "successSubtle": "#F0FDF4",
+    "warning": "#D97706",
+    "warningSubtle": "#FFFBEB",
+    "error": "#DC2626",
+    "errorSubtle": "#FEF2F2",
+    "info": "#0284C7",
+    "infoSubtle": "#F0F9FF"
+  }
+}

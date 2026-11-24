@@ -1,0 +1,30 @@
+{
+  "id": "tokyo-night",
+  "name": "Tokyo Night",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Cybernetic downtown Tokyo aesthetic with neon midnight blues.",
+  "colors": {
+    "background": "#16161E",
+    "secondaryBackground": "#1A1B26",
+    "surface": "#24283B",
+    "elevatedSurface": "#2F354A",
+    "border": "#3B4261",
+    "borderFocus": "#7AA2F7",
+    "primaryText": "#C0CAF5",
+    "secondaryText": "#9AA5CE",
+    "tertiaryText": "#565F89",
+    "accent": "#7AA2F7",
+    "accentHover": "#5E89E8",
+    "accentSubtle": "#223157",
+    "success": "#9ECE6A",
+    "successSubtle": "#2B401F",
+    "warning": "#E0AF68",
+    "warningSubtle": "#47341D",
+    "error": "#F7768E",
+    "errorSubtle": "#4A202A",
+    "info": "#7DCFFF",
+    "infoSubtle": "#213D52"
+  }
+}

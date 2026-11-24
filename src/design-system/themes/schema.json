@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NexusTheme",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "type",
+    "colors"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique theme identifier (e.g. midnight, nord)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable theme display name"
+    },
+    "author": {
+      "type": "string",
+      "default": "NEXUS OS Core Team"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["dark", "light"]
+    },
+    "colors": {
+      "type": "object",
+      "required": [
+        "background",
+        "secondaryBackground",
+        "surface",
+        "elevatedSurface",
+        "border",
+        "primaryText",
+        "secondaryText",
+        "accent",
+        "success",
+        "warning",
+        "error",
+        "info"
+      ],
+      "properties": {
+        "background": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$" },
+        "secondaryBackground": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$" },
+        "surface": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$" },
+        "elevatedSurface": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$" },
+        "border": { "type": "string" },
+        "borderFocus": { "type": "string" },
+        "primaryText": { "type": "string" },
+        "secondaryText": { "type": "string" },
+        "tertiaryText": { "type": "string" },
+        "accent": { "type": "string" },
+        "accentHover": { "type": "string" },
+        "accentSubtle": { "type": "string" },
+        "success": { "type": "string" },
+        "successSubtle": { "type": "string" },
+        "warning": { "type": "string" },
+        "warningSubtle": { "type": "string" },
+        "error": { "type": "string" },
+        "errorSubtle": { "type": "string" },
+        "info": { "type": "string" },
+        "infoSubtle": { "type": "string" }
+      }
+    }
+  }
+}

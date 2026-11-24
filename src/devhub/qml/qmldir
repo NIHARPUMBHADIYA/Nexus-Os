@@ -1,0 +1,5 @@
+module Nexus.DevHub
+NexusDevHubView 1.0 NexusDevHubView.qml
+ProjectDashboard 1.0 ProjectDashboard.qml
+ProjectCreationWizard 1.0 ProjectCreationWizard.qml
+ProjectWorkspace 1.0 ProjectWorkspace.qml

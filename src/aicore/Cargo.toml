@@ -1,0 +1,17 @@
+[package]
+name = "nexus-aid"
+version = "0.1.0"
+edition = "2021"
+description = "NEXUS OS AI Core Daemon - Local AI multiplexer, hardware governor, and Ollama bridge"
+license = "Apache-2.0"
+
+[dependencies]
+tokio = { version = "1.40", features = ["full"] }
+axum = "0.7"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream"] }
+thiserror = "1.0"
+anyhow = "1.0"

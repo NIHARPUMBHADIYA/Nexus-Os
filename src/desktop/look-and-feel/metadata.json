@@ -1,0 +1,15 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "team@nexus-os.org",
+                "Name": "NEXUS OS Systems Engineering"
+            }
+        ],
+        "Description": "NEXUS OS Aether Look and Feel theme for KDE Plasma 6",
+        "Id": "org.nexus.aether.desktop",
+        "Name": "Nexus Aether",
+        "Version": "1.0.0"
+    }
+}

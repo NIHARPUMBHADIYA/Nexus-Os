@@ -1,0 +1,30 @@
+{
+  "id": "dracula",
+  "name": "Dracula",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Classic dark gothic developer palette with rich purples and pinks.",
+  "colors": {
+    "background": "#1E1F29",
+    "secondaryBackground": "#282A36",
+    "surface": "#343746",
+    "elevatedSurface": "#44475A",
+    "border": "#555870",
+    "borderFocus": "#BD93F9",
+    "primaryText": "#F8F8F2",
+    "secondaryText": "#A2ABCC",
+    "tertiaryText": "#6272A4",
+    "accent": "#BD93F9",
+    "accentHover": "#A777E3",
+    "accentSubtle": "#3A2B52",
+    "success": "#50FA7B",
+    "successSubtle": "#1B4728",
+    "warning": "#FFB86C",
+    "warningSubtle": "#4A3521",
+    "error": "#FF5555",
+    "errorSubtle": "#4A1C1C",
+    "info": "#8BE9FD",
+    "infoSubtle": "#21444E"
+  }
+}

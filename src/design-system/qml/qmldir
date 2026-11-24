@@ -1,0 +1,20 @@
+module Nexus.DesignSystem
+singleton NexusTheme 1.0 NexusTheme.qml
+NexusButton 1.0 NexusButton.qml
+NexusIconButton 1.0 NexusIconButton.qml
+NexusInput 1.0 NexusInput.qml
+NexusSearchField 1.0 NexusSearchField.qml
+NexusCard 1.0 NexusCard.qml
+NexusDialog 1.0 NexusDialog.qml
+NexusPopover 1.0 NexusPopover.qml
+NexusMenu 1.0 NexusMenu.qml
+NexusTooltip 1.0 NexusTooltip.qml
+NexusTabs 1.0 NexusTabs.qml
+NexusToggle 1.0 NexusToggle.qml
+NexusProgress 1.0 NexusProgress.qml
+NexusNotification 1.0 NexusNotification.qml
+NexusDockItem 1.0 NexusDockItem.qml
+NexusWindowHeader 1.0 NexusWindowHeader.qml
+NexusSidebar 1.0 NexusSidebar.qml
+NexusBadge 1.0 NexusBadge.qml
+NexusShowcase 1.0 NexusShowcase.qml

@@ -1,0 +1,30 @@
+{
+  "id": "deep-space",
+  "name": "Deep Space",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Cosmic interstellar navy void with luminous starlight cyan highlights.",
+  "colors": {
+    "background": "#030712",
+    "secondaryBackground": "#070F22",
+    "surface": "#0D1938",
+    "elevatedSurface": "#14244E",
+    "border": "#1E3466",
+    "borderFocus": "#0284C7",
+    "primaryText": "#F0F9FF",
+    "secondaryText": "#7DD3FC",
+    "tertiaryText": "#38BDF8",
+    "accent": "#0284C7",
+    "accentHover": "#0369A1",
+    "accentSubtle": "#0C2744",
+    "success": "#34D399",
+    "successSubtle": "#0D3325",
+    "warning": "#FBBF24",
+    "warningSubtle": "#362706",
+    "error": "#FB7185",
+    "errorSubtle": "#3B141C",
+    "info": "#38BDF8",
+    "infoSubtle": "#0D2E42"
+  }
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=NEXUS OS First-Boot Provisioning Service
+After=network.target local-fs.target
+Before=sddm.service display-manager.service
+ConditionPathExists=!/var/lib/nexus/firstboot_done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/nexus/nexus-firstboot.sh
+ExecStartPost=/usr/bin/touch /var/lib/nexus/firstboot_done
+RemainAfterExit=yes
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target

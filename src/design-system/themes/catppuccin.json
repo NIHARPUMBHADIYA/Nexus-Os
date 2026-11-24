@@ -1,0 +1,30 @@
+{
+  "id": "catppuccin",
+  "name": "Catppuccin",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Soothing pastel dark palette engineered for low eye-strain developer sessions.",
+  "colors": {
+    "background": "#181825",
+    "secondaryBackground": "#1E1E2E",
+    "surface": "#313244",
+    "elevatedSurface": "#45475A",
+    "border": "#585B70",
+    "borderFocus": "#CBA6F7",
+    "primaryText": "#CDD6F4",
+    "secondaryText": "#A6ADC8",
+    "tertiaryText": "#7F849C",
+    "accent": "#CBA6F7",
+    "accentHover": "#B48EED",
+    "accentSubtle": "#392C4E",
+    "success": "#A6E3A1",
+    "successSubtle": "#274229",
+    "warning": "#F9E2AF",
+    "warningSubtle": "#473F28",
+    "error": "#F38BA8",
+    "errorSubtle": "#492631",
+    "info": "#89DCEB",
+    "infoSubtle": "#224147"
+  }
+}

@@ -1,0 +1,27 @@
+[Unit]
+Description=NEXUS OS AI Core Daemon (nexus-aid)
+Documentation=https://nexus-os.org/docs/subsystems/aicore
+After=network.target nexus-ollama.service nexus-omniroute.service
+Wants=nexus-ollama.service nexus-omniroute.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/nexus-aid
+Restart=always
+RestartSec=3s
+Environment=RUST_LOG=info
+Environment=NEXUS_AI_PORT=11430
+Environment=NEXUS_SAFE_VRAM_HEADROOM_MB=2048
+StandardOutput=journal
+StandardError=journal
+LimitNOFILE=65536
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.config/nexus/aicore %h/.local/share/nexus/aicore
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

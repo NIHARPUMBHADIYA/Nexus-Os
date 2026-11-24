@@ -1,0 +1,30 @@
+{
+  "id": "amoled",
+  "name": "AMOLED",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "True #000000 pitch black foundation tailored for OLED displays and maximum contrast.",
+  "colors": {
+    "background": "#000000",
+    "secondaryBackground": "#080808",
+    "surface": "#121212",
+    "elevatedSurface": "#1C1C1C",
+    "border": "#27272A",
+    "borderFocus": "#6366F1",
+    "primaryText": "#FFFFFF",
+    "secondaryText": "#A1A1AA",
+    "tertiaryText": "#71717A",
+    "accent": "#6366F1",
+    "accentHover": "#4F46E5",
+    "accentSubtle": "#18182E",
+    "success": "#22C55E",
+    "successSubtle": "#0A2912",
+    "warning": "#EAB308",
+    "warningSubtle": "#2B2104",
+    "error": "#EF4444",
+    "errorSubtle": "#2E0E0E",
+    "info": "#06B6D4",
+    "infoSubtle": "#082329"
+  }
+}

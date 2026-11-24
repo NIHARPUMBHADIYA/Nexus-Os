@@ -1,0 +1,30 @@
+{
+  "id": "terminal-green",
+  "name": "Terminal Green",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Phosphor CRT hacker aesthetic with monochromatic matrix greens.",
+  "colors": {
+    "background": "#050B06",
+    "secondaryBackground": "#0A140C",
+    "surface": "#0F1E12",
+    "elevatedSurface": "#172E1C",
+    "border": "#1E3B24",
+    "borderFocus": "#22C55E",
+    "primaryText": "#4ADE80",
+    "secondaryText": "#22C55E",
+    "tertiaryText": "#15803D",
+    "accent": "#22C55E",
+    "accentHover": "#16A34A",
+    "accentSubtle": "#0F2E16",
+    "success": "#4ADE80",
+    "successSubtle": "#0F3818",
+    "warning": "#FACC15",
+    "warningSubtle": "#3B3308",
+    "error": "#F87171",
+    "errorSubtle": "#3B1515",
+    "info": "#2DD4BF",
+    "infoSubtle": "#0D332D"
+  }
+}

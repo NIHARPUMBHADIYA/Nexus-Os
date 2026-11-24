@@ -1,0 +1,14 @@
+{
+  "defaultTheme": "midnight",
+  "themes": [
+    "midnight",
+    "nord",
+    "dracula",
+    "catppuccin",
+    "tokyo-night",
+    "terminal-green",
+    "paper-light",
+    "amoled",
+    "deep-space"
+  ]
+}

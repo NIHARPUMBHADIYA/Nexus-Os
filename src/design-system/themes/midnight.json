@@ -1,0 +1,30 @@
+{
+  "id": "midnight",
+  "name": "Midnight",
+  "author": "NEXUS OS Core Team",
+  "version": "1.0.0",
+  "type": "dark",
+  "description": "Default NEXUS dark theme. Obsidian slate foundations with vibrant indigo focus.",
+  "colors": {
+    "background": "#0B0D14",
+    "secondaryBackground": "#10131E",
+    "surface": "#171B2B",
+    "elevatedSurface": "#1F2439",
+    "border": "#282E47",
+    "borderFocus": "#6366F1",
+    "primaryText": "#F3F4F6",
+    "secondaryText": "#94A3B8",
+    "tertiaryText": "#64748B",
+    "accent": "#6366F1",
+    "accentHover": "#4F46E5",
+    "accentSubtle": "#1E2243",
+    "success": "#10B981",
+    "successSubtle": "#0F3327",
+    "warning": "#F59E0B",
+    "warningSubtle": "#3B2B11",
+    "error": "#EF4444",
+    "errorSubtle": "#3E1B1B",
+    "info": "#38BDF8",
+    "infoSubtle": "#123046"
+  }
+}

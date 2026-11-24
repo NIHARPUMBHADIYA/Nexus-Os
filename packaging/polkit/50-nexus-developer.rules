@@ -1,0 +1,30 @@
+// =============================================================================
+// NEXUS OS — Polkit Privilege Separation Rules
+// Target: /etc/polkit-1/rules.d/50-nexus-developer.rules
+// =============================================================================
+
+polkit.addRule(function(action, subject) {
+    // 1. Allow desktop user to manage user-session systemd units without password
+    if (action.id.indexOf("org.freedesktop.systemd1.manage-units") === 0 &&
+        subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+
+    // 2. Allow checking package updates and repository metadata
+    if (action.id === "org.freedesktop.packagekit.system-sources-refresh" ||
+        action.id === "org.freedesktop.packagekit.package-install-untrusted") {
+        return polkit.Result.AUTH_ADMIN;
+    }
+
+    // 3. Allow standard NetworkManager and Bluetooth connections in desktop session
+    if ((action.id.indexOf("org.freedesktop.NetworkManager.") === 0 ||
+         action.id.indexOf("org.bluez.") === 0) &&
+        subject.active) {
+        return polkit.Result.YES;
+    }
+
+    // 4. Default: require admin authorization for system-level actions
+    if (action.id.indexOf("org.freedesktop.") === 0 && subject.isInGroup("wheel")) {
+        return polkit.Result.AUTH_ADMIN;
+    }
+});
