@@ -58,11 +58,15 @@ jobs:
             --privileged \
             --security-opt label=type:unconfined_t \
             -v $(pwd)/build:/output \
+            -v $(pwd)/packaging/bootc/data:/data:ro \
+            -v $(pwd)/packaging/bootc/data/repositories/fedora-41.json:/usr/share/bootc-image-builder/repositories/fedora-41.json:ro \
+            -v $(pwd)/packaging/bootc/data/repositories/fedora-41.json:/usr/share/osbuild-composer/repositories/fedora-41.json:ro \
+            -v $(pwd)/packaging/bootc/data/repositories/fedora-41.json:/etc/osbuild-composer/repositories/fedora-41.json:ro \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
             quay.io/centos-bootc/bootc-image-builder:latest \
             --type iso \
             --rootfs ext4 \
-            --local \
+            --data-dir /data \
             localhost/nexus-os:2026.1
 
       - name: Package & Checksum Output ISO

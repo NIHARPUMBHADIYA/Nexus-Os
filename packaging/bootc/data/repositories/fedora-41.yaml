@@ -1,0 +1,7 @@
+x86_64:
+  - name: fedora
+    metalink: https://mirrors.fedoraproject.org/metalink?repo=fedora-41&arch=x86_64
+    check_gpg: false
+  - name: updates
+    metalink: https://mirrors.fedoraproject.org/metalink?repo=updates-released-f41&arch=x86_64
+    check_gpg: false
