@@ -51,22 +51,22 @@ jobs:
           echo "=== Step 2: Inspecting kernel and initramfs inside container ==="
           sudo podman run --rm localhost/nexus-os:2026.1 sh -c 'ls -la /usr/lib/modules/' || true
           echo "=== Step 3: Checking bootc-image-builder help ==="
-          sudo podman run --rm quay.io/centos-bootc/bootc-image-builder:latest --help || true
+          sudo podman run --rm quay.io/centos-bootc/bootc-image-builder:latest build --help || true
           echo "=== Step 4: Executing bootc-image-builder for ISO generation ==="
           sudo podman run \
             --rm \
             --privileged \
             --security-opt label=type:unconfined_t \
             -v $(pwd)/build:/output \
-            -v $(pwd)/packaging/bootc/data:/data:ro \
-            -v $(pwd)/packaging/bootc/data/repositories/fedora-41.json:/usr/share/bootc-image-builder/repositories/fedora-41.json:ro \
-            -v $(pwd)/packaging/bootc/data/repositories/fedora-41.json:/usr/share/osbuild-composer/repositories/fedora-41.json:ro \
-            -v $(pwd)/packaging/bootc/data/repositories/fedora-41.json:/etc/osbuild-composer/repositories/fedora-41.json:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/repositories:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/usr/share/bootc-image-builder/repositories:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/usr/share/osbuild-composer/repositories:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/etc/osbuild-composer/repositories:ro \
+            -v $(pwd)/packaging/bootc/data/repositories:/app/repositories:ro \
             -v /var/lib/containers/storage:/var/lib/containers/storage \
             quay.io/centos-bootc/bootc-image-builder:latest \
             --type iso \
             --rootfs ext4 \
-            --data-dir /data \
             localhost/nexus-os:2026.1
 
       - name: Package & Checksum Output ISO
