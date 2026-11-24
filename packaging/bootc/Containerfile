@@ -64,31 +64,37 @@ RUN dnf -y install \
     cargo \
     && dnf clean all
 
-# 4. Copy NEXUS OS Core Binaries, QML Shell & Configurations
+# 4. Create Default Live User & Configure Privileges
+RUN useradd -m -u 1000 -G wheel -s /bin/bash nexus && \
+    echo "nexus:nexus" | chpasswd && \
+    echo "nexus ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/nexus && \
+    chmod 0440 /etc/sudoers.d/nexus
+
+# 5. Copy NEXUS OS Core Binaries, QML Shell & Configurations
 RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus
 
 COPY src/ /usr/share/nexus/src/
 COPY packaging/systemd/ /etc/systemd/system/
 COPY packaging/polkit/50-nexus-developer.rules /etc/polkit-1/rules.d/50-nexus-developer.rules
 
-# 5. Configure SDDM Display Manager & Aether Session
-RUN mkdir -p /etc/sddm.conf.d
-RUN echo -e "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n" > /etc/sddm.conf.d/nexus_theme.conf
+# 6. Configure SDDM Display Manager & Aether Session with Autologin
+RUN mkdir -p /etc/sddm.conf.d && \
+    echo -e "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=nexus\nSession=plasmawayland\n" > /etc/sddm.conf.d/nexus_theme.conf
 
-# 6. Configure Zero Telemetry & Privacy Enforcements
+# 7. Configure Zero Telemetry & Privacy Enforcements
 RUN mkdir -p /etc/nexus && \
     echo '{"privacy.telemetry_enabled": false, "security.loopback_only": true}' > /etc/nexus/system_policy.json
 
-# 7. Enable Essential Systemd Daemons
+# 8. Enable Essential Systemd Daemons
 RUN systemctl enable sddm.service && \
     systemctl enable NetworkManager.service && \
     systemctl enable bluetooth.service && \
     systemctl enable podman.socket
 
-# 8. First-Boot Provisioning Service
+# 9. First-Boot Provisioning Service
 COPY packaging/scripts/nexus-firstboot.sh /usr/libexec/nexus/nexus-firstboot.sh
 RUN chmod 0755 /usr/libexec/nexus/nexus-firstboot.sh && \
     systemctl enable nexus-firstboot.service || true
 
-# 9. Clean caches and prepare container image for bootc kernel assembly
+# 10. Clean caches and prepare container image for bootc kernel assembly
 RUN dnf clean all && rm -rf /var/cache/dnf /tmp/* /var/tmp/*
