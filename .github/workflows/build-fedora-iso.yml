@@ -44,7 +44,7 @@ jobs:
           sudo podman build \
             --progress=plain \
             -t localhost/nexus-os:2026.1 \
-            -f packaging/bootc/Containerfile .
+            -f packaging/bootc/Containerfile . 2>&1 | tee /tmp/step5.log
 
       - name: Generate Bootable Fedora ISO via bootc-image-builder
         run: |
@@ -114,6 +114,7 @@ jobs:
         run: |
           mkdir -p ci-logs
           echo "Run ID: ${{ github.run_id }}" > ci-logs/summary.txt
+          cat /tmp/step5.log >> ci-logs/summary.txt 2>/dev/null || true
           cat /tmp/step6.log >> ci-logs/summary.txt 2>/dev/null || true
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
