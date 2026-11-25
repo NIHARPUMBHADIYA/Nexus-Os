@@ -49,7 +49,20 @@ mkdir -p /etc/skel/Projects
 mkdir -p /etc/skel/.config/nexus
 mkdir -p /etc/skel/.local/share/nexus
 
-# 5. Disable firstboot service so it only runs once
+# 5. Automatically configure SDDM autologin for the user created during initial setup
+FIRST_USER=$(awk -F: '$3 == 1000 {print $1}' /etc/passwd || true)
+if [ -n "${FIRST_USER}" ]; then
+    mkdir -p /etc/sddm.conf.d
+    cat << EOF > /etc/sddm.conf.d/autologin.conf
+[Autologin]
+User=${FIRST_USER}
+Session=plasma
+Relogin=false
+EOF
+    echo "✓ SDDM autologin configured for newly created user: ${FIRST_USER}"
+fi
+
+# 6. Disable firstboot service so it only runs once
 if command -v systemctl >/dev/null 2>&1; then
     systemctl disable nexus-firstboot.service || true
 fi

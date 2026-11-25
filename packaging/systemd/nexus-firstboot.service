@@ -1,6 +1,6 @@
 [Unit]
 Description=NEXUS OS First-Boot Provisioning Service
-After=network.target local-fs.target
+After=network.target local-fs.target initial-setup.service initial-setup-graphical.service
 Before=sddm.service display-manager.service
 ConditionPathExists=!/var/lib/nexus/firstboot_done
 

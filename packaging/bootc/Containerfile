@@ -25,6 +25,9 @@ RUN dnf -y install \
     qt6-qtsvg \
     python3-pyqt6 \
     python3-pyqt6-sip \
+    initial-setup \
+    initial-setup-gui \
+    initial-setup-gui-wayland-plasma \
     pipewire \
     wireplumber \
     pipewire-pulseaudio \
@@ -67,11 +70,10 @@ RUN dnf -y install \
     cargo \
     && dnf clean all
 
-# 4. Create Default Live User & Configure Privileges
-RUN useradd -m -u 1000 -G wheel -s /bin/bash nexus && \
-    echo "nexus:nexus" | chpasswd && \
-    echo "nexus ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/nexus && \
-    chmod 0440 /etc/sudoers.d/nexus
+# 4. Configure Administrator Privileges & First-Boot Account Setup Trigger
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel && \
+    chmod 0440 /etc/sudoers.d/wheel && \
+    touch /etc/reconfigSys
 
 # 5. Copy NEXUS OS Core Binaries, QML Shell & Configurations
 RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus /etc/xdg/autostart
@@ -88,9 +90,9 @@ RUN chmod +x /usr/share/nexus/tools/*.py && \
     ln -sf /usr/share/nexus/tools/run_settings.py /usr/bin/nexus-settings && \
     ln -sf /usr/share/nexus/tools/run_spotlight.py /usr/bin/nexus-spotlight
 
-# 6. Configure SDDM Display Manager & Aether Session with Autologin
+# 6. Configure SDDM Display Manager & Wayland Session
 RUN mkdir -p /etc/sddm.conf.d /usr/share/wayland-sessions && \
-    printf "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=nexus\nSession=plasma\nRelogin=false\n" > /etc/sddm.conf.d/nexus_theme.conf && \
+    printf "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nSession=plasma\nRelogin=false\n" > /etc/sddm.conf.d/nexus_theme.conf && \
     ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/plasmawayland.desktop 2>/dev/null || true && \
     ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/nexus.desktop 2>/dev/null || true
 
@@ -98,11 +100,13 @@ RUN mkdir -p /etc/sddm.conf.d /usr/share/wayland-sessions && \
 RUN mkdir -p /etc/nexus && \
     echo '{"privacy.telemetry_enabled": false, "security.loopback_only": true}' > /etc/nexus/system_policy.json
 
-# 8. Enable Essential Systemd Daemons
+# 8. Enable Essential Systemd Daemons & Initial Setup
 RUN systemctl enable sddm.service && \
     systemctl enable NetworkManager.service && \
     systemctl enable bluetooth.service && \
-    systemctl enable podman.socket
+    systemctl enable podman.socket && \
+    systemctl enable initial-setup.service && \
+    systemctl enable initial-setup-graphical.service
 
 # 9. First-Boot Provisioning Service
 COPY packaging/scripts/nexus-firstboot.sh /usr/libexec/nexus/nexus-firstboot.sh
