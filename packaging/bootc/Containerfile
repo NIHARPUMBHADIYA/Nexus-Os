@@ -22,6 +22,9 @@ RUN dnf -y install \
     qt6-qtbase \
     qt6-qtdeclarative \
     qt6-qtquickcontrols2 \
+    qt6-qtsvg \
+    python3-pyqt6 \
+    python3-pyqt6-sip \
     pipewire \
     wireplumber \
     pipewire-pulseaudio \
@@ -71,15 +74,25 @@ RUN useradd -m -u 1000 -G wheel -s /bin/bash nexus && \
     chmod 0440 /etc/sudoers.d/nexus
 
 # 5. Copy NEXUS OS Core Binaries, QML Shell & Configurations
-RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus
+RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus /etc/xdg/autostart
 
 COPY src/ /usr/share/nexus/src/
+COPY tools/ /usr/share/nexus/tools/
 COPY packaging/systemd/ /etc/systemd/system/
 COPY packaging/polkit/50-nexus-developer.rules /etc/polkit-1/rules.d/50-nexus-developer.rules
+COPY packaging/autostart/ /etc/xdg/autostart/
+
+RUN chmod +x /usr/share/nexus/tools/*.py && \
+    ln -sf /usr/share/nexus/tools/run_desktop.py /usr/bin/nexus-desktop && \
+    ln -sf /usr/share/nexus/tools/run_setup.py /usr/bin/nexus-setup && \
+    ln -sf /usr/share/nexus/tools/run_settings.py /usr/bin/nexus-settings && \
+    ln -sf /usr/share/nexus/tools/run_spotlight.py /usr/bin/nexus-spotlight
 
 # 6. Configure SDDM Display Manager & Aether Session with Autologin
-RUN mkdir -p /etc/sddm.conf.d && \
-    echo -e "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=nexus\nSession=plasmawayland\n" > /etc/sddm.conf.d/nexus_theme.conf
+RUN mkdir -p /etc/sddm.conf.d /usr/share/wayland-sessions && \
+    printf "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=nexus\nSession=plasma\nRelogin=false\n" > /etc/sddm.conf.d/nexus_theme.conf && \
+    ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/plasmawayland.desktop 2>/dev/null || true && \
+    ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/nexus.desktop 2>/dev/null || true
 
 # 7. Configure Zero Telemetry & Privacy Enforcements
 RUN mkdir -p /etc/nexus && \

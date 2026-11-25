@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=NEXUS OS Desktop Shell
+Comment=NEXUS OS Aether Floating Dock, Spotlight, and System Panels
+Exec=/usr/bin/nexus-desktop
+Icon=preferences-desktop
+Terminal=false
+Categories=System;
+StartupNotify=false
+X-KDE-autostart-phase=2

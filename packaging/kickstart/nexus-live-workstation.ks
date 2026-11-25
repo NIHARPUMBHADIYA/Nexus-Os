@@ -113,7 +113,7 @@ mkdir -p /etc/sddm.conf.d
 cat << 'EOF' > /etc/sddm.conf.d/live_autologin.conf
 [Autologin]
 User=liveuser
-Session=plasmawayland
+Session=plasma
 
 [Theme]
 Current=breeze

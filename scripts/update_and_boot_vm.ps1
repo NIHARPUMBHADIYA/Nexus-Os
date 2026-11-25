@@ -1,4 +1,4 @@
-﻿# NEXUS OS — VirtualBox Test Automation Script
+# NEXUS OS — VirtualBox Test Automation Script
 param(
     [string]$IsoPath = "D:\My own os\build\nexus-os-2026.1-x86_64.iso",
     [string]$VmName = "Nex OS"

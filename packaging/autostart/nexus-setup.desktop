@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=NEXUS OS Setup
+Comment=First-Boot Local User Account Setup
+Exec=/usr/bin/nexus-setup
+Icon=system-users
+Terminal=false
+Categories=System;Settings;
+StartupNotify=true
+X-KDE-autostart-phase=2
