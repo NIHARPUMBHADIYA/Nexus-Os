@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=NEXUS OS Setup
+Comment=First-Boot Local User Account Setup Wizard
+Exec=/usr/bin/nexus-setup-session
+Type=Application

@@ -189,8 +189,12 @@ class TestSystemIntegration(unittest.TestCase):
     def test_18_git_repo_status(self):
         """Verify Git repository status for git and non-git directories."""
         # Non-git directory check
-        non_git = self.integration.get_git_status(base_dir)
-        self.assertFalse(non_git.get("is_git", False))
+        tmp_non_git = tempfile.mkdtemp(prefix="nexus_nongit_")
+        try:
+            non_git = self.integration.get_git_status(tmp_non_git)
+            self.assertFalse(non_git.get("is_git", False))
+        finally:
+            shutil.rmtree(tmp_non_git, ignore_errors=True)
 
         # Create temporary git repo to test git inspection
         git_bin = shutil.which("git")

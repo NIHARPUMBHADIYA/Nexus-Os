@@ -67,44 +67,42 @@ RUN dnf -y install \
     cargo \
     && dnf clean all
 
-# 4. Create Unprivileged Live User & Configure Privileges
-RUN useradd -m -u 1000 -c "NEXUS Live User" -G wheel -s /bin/bash liveuser && \
-    echo "liveuser:live" | chpasswd && \
+# 4. Create Unprivileged First-Boot Setup Runner (OOBE)
+RUN useradd -r -m -u 999 -d /var/lib/nexus-setup -c "NEXUS Setup Runner" -G wheel -s /bin/bash setup && \
+    passwd -d setup && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel && \
     chmod 0440 /etc/sudoers.d/wheel && \
     mkdir -p /etc/pam.d && \
     printf "#%%PAM-1.0\nauth required pam_permit.so\naccount required pam_permit.so\npassword required pam_permit.so\nsession required pam_permit.so\n" > /etc/pam.d/sddm-autologin
 
 # 5. Copy NEXUS OS Core Binaries, QML Shell & Configurations
-RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus /etc/xdg/autostart
+RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus /etc/xdg/autostart /usr/share/wayland-sessions
 
 COPY src/ /usr/share/nexus/src/
 COPY tools/ /usr/share/nexus/tools/
 COPY packaging/systemd/ /etc/systemd/system/
 COPY packaging/polkit/50-nexus-developer.rules /etc/polkit-1/rules.d/50-nexus-developer.rules
 COPY packaging/autostart/ /etc/xdg/autostart/
+COPY packaging/wayland-sessions/nexus-setup.desktop /usr/share/wayland-sessions/nexus-setup.desktop
+COPY packaging/scripts/nexus-setup-session.sh /usr/bin/nexus-setup-session
 
-RUN chmod +x /usr/share/nexus/tools/*.py && \
+RUN chmod +x /usr/share/nexus/tools/*.py /usr/bin/nexus-setup-session && \
     ln -sf /usr/share/nexus/tools/run_desktop.py /usr/bin/nexus-desktop && \
     ln -sf /usr/share/nexus/tools/run_setup.py /usr/bin/nexus-setup && \
     ln -sf /usr/share/nexus/tools/run_settings.py /usr/bin/nexus-settings && \
     ln -sf /usr/share/nexus/tools/run_spotlight.py /usr/bin/nexus-spotlight
 
-# 6. Configure SDDM Display Manager & Wayland Session with Guaranteed Autologin
+# 6. Configure SDDM Display Manager & Wayland Session with First-Boot Setup Wizard
 RUN mkdir -p /etc/sddm.conf.d /usr/share/wayland-sessions && \
-    AUTOLOGIN_CONF="[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=liveuser\nSession=plasma.desktop\nRelogin=false\n" && \
+    AUTOLOGIN_CONF="[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=setup\nSession=nexus-setup.desktop\nRelogin=false\n" && \
     printf "${AUTOLOGIN_CONF}" > /etc/sddm.conf && \
     printf "${AUTOLOGIN_CONF}" > /etc/sddm.conf.d/autologin.conf && \
     printf "${AUTOLOGIN_CONF}" > /etc/sddm.conf.d/nexus_theme.conf && \
     ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/plasmawayland.desktop 2>/dev/null || true && \
-    ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/nexus.desktop 2>/dev/null || true && \
-    mkdir -p /etc/skel/Desktop /home/liveuser/Desktop && \
-    cp -f /etc/xdg/autostart/nexus-setup.desktop /etc/skel/Desktop/ 2>/dev/null || true && \
-    cp -f /etc/xdg/autostart/nexus-setup.desktop /home/liveuser/Desktop/ 2>/dev/null || true && \
-    chown -R liveuser:liveuser /home/liveuser/Desktop 2>/dev/null || true
+    ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/nexus.desktop 2>/dev/null || true
 
 # 7. Brand Operating System Identity as NEXUS OS (Eliminate Red Hat / Fedora vendor strings)
-RUN printf 'NAME="NEXUS OS"\nVERSION="2026.1 (Aether)"\nID=nexus\nID_LIKE="fedora"\nVERSION_ID="2026.1"\nPRETTY_NAME="NEXUS OS 2026.1 (Aether)"\nANSI_COLOR="0;36"\nCPE_NAME="cpe:/o:nexus:nexus:2026.1"\nHOME_URL="https://nexus-os.org/"\nBUG_REPORT_URL="https://github.com/NIHARPUMBHADIYA/Nexus-Os/issues"\nDOCUMENTATION_URL="https://nexus-os.org/docs"\nLOGO="nexus-logo"\n' > /etc/os-release && \
+RUN printf 'NAME="NEXUS OS"\nVERSION="2026.1 (Aether)"\nID=nexus\nID_LIKE="fedora"\nVERSION_ID="41"\nPRETTY_NAME="NEXUS OS 2026.1 (Aether)"\nANSI_COLOR="0;36"\nCPE_NAME="cpe:/o:nexus:nexus:2026.1"\nHOME_URL="https://nexus-os.org/"\nBUG_REPORT_URL="https://github.com/NIHARPUMBHADIYA/Nexus-Os/issues"\nDOCUMENTATION_URL="https://nexus-os.org/docs"\nLOGO="nexus-logo"\n' > /etc/os-release && \
     cp -f /etc/os-release /usr/lib/os-release 2>/dev/null || true && \
     echo "NEXUS OS release 2026.1 (Aether)" > /etc/system-release && \
     echo "NEXUS OS release 2026.1 (Aether)" > /etc/redhat-release && \

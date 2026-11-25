@@ -321,11 +321,13 @@ Rectangle {
                 spacing: 12
 
                 NexusButton {
-                    text: "Skip & Use Default Live User"
+                    text: "Shut Down"
                     variant: "ghost"
                     size: "md"
                     onClicked: {
-                        if (typeof setupWindow !== "undefined" && setupWindow.close) {
+                        if (setupBridge) {
+                            setupBridge.shutDown()
+                        } else if (typeof setupWindow !== "undefined" && setupWindow.close) {
                             setupWindow.close()
                         } else {
                             Qt.quit()

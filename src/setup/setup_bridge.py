@@ -45,6 +45,17 @@ class SetupBridge(QObject):
         self._is_loading = loading
         self.isLoadingChanged.emit()
 
+    @pyqtSlot()
+    def shutDown(self):
+        """Cleanly power off the machine if user cancels initial setup."""
+        if sys.platform.startswith("linux"):
+            try:
+                subprocess.run(["systemctl", "poweroff"])
+            except Exception as e:
+                print(f"[NEXUS SETUP] Power off error: {e}")
+        else:
+            print("[MOCK SETUP] Power off requested.")
+
     @pyqtSlot(str, str, str, str, bool, bool, result=bool)
     def createAccount(
         self,
@@ -182,13 +193,22 @@ class SetupBridge(QObject):
                         "Session=plasma.desktop\n"
                         "Relogin=false\n"
                     )
-                    for sddm_target in ["/etc/sddm.conf", "/etc/sddm.conf.d/autologin.conf", "/etc/sddm.conf.d/nexus_theme.conf"]:
-                        try:
-                            os.makedirs(os.path.dirname(sddm_target), exist_ok=True)
-                            with open(sddm_target, "w") as f:
-                                f.write(conf_content)
-                        except Exception:
-                            pass
+                else:
+                    conf_content = (
+                        "[Theme]\n"
+                        "Current=breeze\n\n"
+                        "[General]\n"
+                        "InputMethod=\n"
+                        "Numlock=none\n"
+                        "DisplayServer=wayland\n\n"
+                    )
+                for sddm_target in ["/etc/sddm.conf", "/etc/sddm.conf.d/autologin.conf", "/etc/sddm.conf.d/nexus_theme.conf"]:
+                    try:
+                        os.makedirs(os.path.dirname(sddm_target), exist_ok=True)
+                        with open(sddm_target, "w") as f:
+                            f.write(conf_content)
+                    except Exception:
+                        pass
 
                 # Mark setup as completed
                 os.makedirs(os.path.dirname(self._marker_file), exist_ok=True)
@@ -198,6 +218,18 @@ class SetupBridge(QObject):
                 os.makedirs("/etc/nexus", exist_ok=True)
                 with open(self._legacy_marker, "w") as f:
                     f.write(f'{{"user": "{username}", "full_name": "{full_name}"}}\n')
+
+                # Lock the temporary setup runner account
+                try:
+                    subprocess.run(["usermod", "-L", "setup"], check=False)
+                except Exception:
+                    pass
+
+                # Transition to the newly created user session
+                try:
+                    subprocess.Popen(["systemctl", "restart", "sddm"])
+                except Exception as e:
+                    print(f"[NEXUS SETUP] Restart SDDM trigger: {e}")
 
             except Exception as e:
                 self.set_error(f"Unexpected error creating account: {str(e)}")

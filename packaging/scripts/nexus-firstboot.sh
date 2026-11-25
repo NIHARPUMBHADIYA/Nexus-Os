@@ -49,17 +49,30 @@ mkdir -p /etc/skel/Projects
 mkdir -p /etc/skel/.config/nexus
 mkdir -p /etc/skel/.local/share/nexus
 
-# 5. Automatically configure SDDM autologin for the user created during initial setup
-FIRST_USER=$(awk -F: '$3 == 1000 {print $1}' /etc/passwd || true)
-if [ -n "${FIRST_USER}" ]; then
+# 5. Maintain First-Boot Setup Configuration
+# If setup has not been performed, ensure SDDM launches the setup wizard for the setup runner
+if [ ! -f "/var/lib/nexus/setup_done" ]; then
     mkdir -p /etc/sddm.conf.d
-    cat << EOF > /etc/sddm.conf.d/autologin.conf
+    cat << 'EOF' > /etc/sddm.conf.d/autologin.conf
 [Autologin]
-User=${FIRST_USER}
+User=setup
+Session=nexus-setup.desktop
+Relogin=false
+EOF
+    echo "✓ First-boot OOBE setup wizard session armed."
+else
+    # If setup was already completed, ensure autologin points to the configured user
+    CFG_USER=$(grep -E '^configured_user=' /var/lib/nexus/setup_done | cut -d= -f2 || true)
+    if [ -n "${CFG_USER}" ]; then
+        mkdir -p /etc/sddm.conf.d
+        cat << EOF > /etc/sddm.conf.d/autologin.conf
+[Autologin]
+User=${CFG_USER}
 Session=plasma.desktop
 Relogin=false
 EOF
-    echo "✓ SDDM autologin configured for newly created user: ${FIRST_USER}"
+        echo "✓ SDDM autologin configured for established user: ${CFG_USER}"
+    fi
 fi
 
 # 6. Disable firstboot service so it only runs once
