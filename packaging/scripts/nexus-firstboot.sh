@@ -56,7 +56,7 @@ if [ -n "${FIRST_USER}" ]; then
     cat << EOF > /etc/sddm.conf.d/autologin.conf
 [Autologin]
 User=${FIRST_USER}
-Session=plasma
+Session=plasma.desktop
 Relogin=false
 EOF
     echo "✓ SDDM autologin configured for newly created user: ${FIRST_USER}"

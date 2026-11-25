@@ -69,9 +69,11 @@ RUN dnf -y install \
 
 # 4. Create Unprivileged Live User & Configure Privileges
 RUN useradd -m -u 1000 -c "NEXUS Live User" -G wheel -s /bin/bash liveuser && \
-    passwd -d liveuser && \
+    echo "liveuser:live" | chpasswd && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel && \
-    chmod 0440 /etc/sudoers.d/wheel
+    chmod 0440 /etc/sudoers.d/wheel && \
+    mkdir -p /etc/pam.d && \
+    printf "#%%PAM-1.0\nauth required pam_permit.so\naccount required pam_permit.so\npassword required pam_permit.so\nsession required pam_permit.so\n" > /etc/pam.d/sddm-autologin
 
 # 5. Copy NEXUS OS Core Binaries, QML Shell & Configurations
 RUN mkdir -p /usr/libexec/nexus /usr/share/nexus /etc/nexus /etc/skel/.config/nexus /etc/xdg/autostart
@@ -88,14 +90,28 @@ RUN chmod +x /usr/share/nexus/tools/*.py && \
     ln -sf /usr/share/nexus/tools/run_settings.py /usr/bin/nexus-settings && \
     ln -sf /usr/share/nexus/tools/run_spotlight.py /usr/bin/nexus-spotlight
 
-# 6. Configure SDDM Display Manager & Wayland Session with Passwordless Live Autologin
+# 6. Configure SDDM Display Manager & Wayland Session with Guaranteed Autologin
 RUN mkdir -p /etc/sddm.conf.d /usr/share/wayland-sessions && \
-    printf "[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=liveuser\nSession=plasma\nRelogin=false\n" > /etc/sddm.conf.d/nexus_theme.conf && \
+    AUTOLOGIN_CONF="[Theme]\nCurrent=breeze\n\n[General]\nInputMethod=\nNumlock=none\nDisplayServer=wayland\n\n[Autologin]\nUser=liveuser\nSession=plasma.desktop\nRelogin=false\n" && \
+    printf "${AUTOLOGIN_CONF}" > /etc/sddm.conf && \
+    printf "${AUTOLOGIN_CONF}" > /etc/sddm.conf.d/autologin.conf && \
+    printf "${AUTOLOGIN_CONF}" > /etc/sddm.conf.d/nexus_theme.conf && \
     ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/plasmawayland.desktop 2>/dev/null || true && \
-    ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/nexus.desktop 2>/dev/null || true
+    ln -sf /usr/share/wayland-sessions/plasma.desktop /usr/share/wayland-sessions/nexus.desktop 2>/dev/null || true && \
+    mkdir -p /etc/skel/Desktop /home/liveuser/Desktop && \
+    cp -f /etc/xdg/autostart/nexus-setup.desktop /etc/skel/Desktop/ 2>/dev/null || true && \
+    cp -f /etc/xdg/autostart/nexus-setup.desktop /home/liveuser/Desktop/ 2>/dev/null || true && \
+    chown -R liveuser:liveuser /home/liveuser/Desktop 2>/dev/null || true
 
-# 7. Configure Zero Telemetry & Privacy Enforcements
-RUN mkdir -p /etc/nexus && \
+# 7. Brand Operating System Identity as NEXUS OS (Eliminate Red Hat / Fedora vendor strings)
+RUN printf 'NAME="NEXUS OS"\nVERSION="2026.1 (Aether)"\nID=nexus\nID_LIKE="fedora"\nVERSION_ID="2026.1"\nPRETTY_NAME="NEXUS OS 2026.1 (Aether)"\nANSI_COLOR="0;36"\nCPE_NAME="cpe:/o:nexus:nexus:2026.1"\nHOME_URL="https://nexus-os.org/"\nBUG_REPORT_URL="https://github.com/NIHARPUMBHADIYA/Nexus-Os/issues"\nDOCUMENTATION_URL="https://nexus-os.org/docs"\nLOGO="nexus-logo"\n' > /etc/os-release && \
+    cp -f /etc/os-release /usr/lib/os-release 2>/dev/null || true && \
+    echo "NEXUS OS release 2026.1 (Aether)" > /etc/system-release && \
+    echo "NEXUS OS release 2026.1 (Aether)" > /etc/redhat-release && \
+    echo "NEXUS OS release 2026.1 (Aether)" > /etc/fedora-release && \
+    printf "NEXUS OS 2026.1 \\n \\l\n" > /etc/issue && \
+    printf "NEXUS OS 2026.1 \\n \\l\n" > /etc/issue.net && \
+    mkdir -p /etc/nexus && \
     echo '{"privacy.telemetry_enabled": false, "security.loopback_only": true}' > /etc/nexus/system_policy.json
 
 # 8. Enable Essential Systemd Daemons

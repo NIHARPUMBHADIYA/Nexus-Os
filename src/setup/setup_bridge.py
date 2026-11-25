@@ -168,11 +168,8 @@ class SetupBridge(QObject):
                         f.write(f"{username} ALL=(ALL) NOPASSWD: ALL\n")
                     os.chmod(sudoers_path, 0o440)
 
-                # Configure SDDM autologin if requested
+                # Configure SDDM autologin for the new user if requested
                 if auto_login:
-                    sddm_dir = "/etc/sddm.conf.d"
-                    os.makedirs(sddm_dir, exist_ok=True)
-                    conf_path = os.path.join(sddm_dir, "nexus_theme.conf")
                     conf_content = (
                         "[Theme]\n"
                         "Current=breeze\n\n"
@@ -182,11 +179,16 @@ class SetupBridge(QObject):
                         "DisplayServer=wayland\n\n"
                         "[Autologin]\n"
                         f"User={username}\n"
-                        "Session=plasma\n"
+                        "Session=plasma.desktop\n"
                         "Relogin=false\n"
                     )
-                    with open(conf_path, "w") as f:
-                        f.write(conf_content)
+                    for sddm_target in ["/etc/sddm.conf", "/etc/sddm.conf.d/autologin.conf", "/etc/sddm.conf.d/nexus_theme.conf"]:
+                        try:
+                            os.makedirs(os.path.dirname(sddm_target), exist_ok=True)
+                            with open(sddm_target, "w") as f:
+                                f.write(conf_content)
+                        except Exception:
+                            pass
 
                 # Mark setup as completed
                 os.makedirs(os.path.dirname(self._marker_file), exist_ok=True)
