@@ -68,7 +68,7 @@ RUN dnf -y install \
     && dnf clean all
 
 # 4. Create Unprivileged First-Boot Setup Runner (OOBE)
-RUN useradd -r -m -u 999 -d /var/lib/nexus-setup -c "NEXUS Setup Runner" -G wheel -s /bin/bash setup && \
+RUN useradd -r -m -d /var/lib/nexus-setup -c "NEXUS Setup Runner" -G wheel -s /bin/bash setup && \
     passwd -d setup && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel && \
     chmod 0440 /etc/sudoers.d/wheel && \
